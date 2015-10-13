@@ -15,6 +15,7 @@ class ScalarProperties(HasTraits):
     f = NumericalTrait(ndim=0, domain=(3, 4))
     g = NumericalTrait(ndim=0, nullable=True)
     h = NumericalTrait(ndim=0, nullable=True, default=1.23)
+    i = NumericalTrait(ndim=0, default=4.56)
 
 class TestScalar(object):
 
@@ -81,13 +82,20 @@ class TestScalar(object):
             self.sp.f = 7
         assert exc.value.args[0] == "f should be in the range [3:4]"
 
-    def test_nullable(self):
+    def test_nullable_default(self):
         assert self.sp.g is None
-        assert self.sp.h is not None
+        assert self.sp.h == 1.23
+        assert self.sp.i == 4.56
         self.sp.g = 1.2
         assert self.sp.g == 1.2
         self.sp.h = None
         assert self.sp.h is None
+        self.sp.i = 1.23
+        assert self.sp.i == 1.23
+        with pytest.raises(TraitError) as exc:
+            self.sp.i = None
+        assert exc.value.args[0] == "radius should be a scalar value"
+
 
 class ArrayProperties(HasTraits):
 
