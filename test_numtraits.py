@@ -13,6 +13,8 @@ class ScalarProperties(HasTraits):
     d = NumericalTrait(ndim=0, domain='negative')
     e = NumericalTrait(ndim=0, domain='strictly-negative')
     f = NumericalTrait(ndim=0, domain=(3, 4))
+    g = NumericalTrait(ndim=0, nullable=True)
+    h = NumericalTrait(ndim=0, nullable=True, default=1.23)
 
 class TestScalar(object):
 
@@ -79,6 +81,13 @@ class TestScalar(object):
             self.sp.f = 7
         assert exc.value.args[0] == "f should be in the range [3:4]"
 
+    def test_nullable(self):
+        assert self.sp.g is None
+        assert self.sp.h is not None
+        self.sp.g = 1.2
+        assert self.sp.g == 1.2
+        self.sp.h = None
+        assert self.sp.h is None
 
 class ArrayProperties(HasTraits):
 
