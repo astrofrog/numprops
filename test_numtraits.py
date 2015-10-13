@@ -94,7 +94,7 @@ class TestScalar(object):
         assert self.sp.i == 1.23
         with pytest.raises(TraitError) as exc:
             self.sp.i = None
-        assert exc.value.args[0] == "radius should be a scalar value"
+        assert exc.value.args[0] == "i should be a scalar value"
 
 
 class ArrayProperties(HasTraits):
