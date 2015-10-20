@@ -25,7 +25,7 @@
 
 from __future__ import print_function
 
-from traitlets import TraitType, TraitError
+from traitlets import TraitType, TraitError, Undefined
 
 import numpy as np
 
@@ -38,23 +38,13 @@ QUANTITIES = 'quantities'
 class NumericalTrait(TraitType):
     info_text = 'a numerical trait, either a scalar or a vector'
     def __init__(self, ndim=None, shape=None, domain=None,
-                 default=None, convertible_to=None, nullable=False):
-        # We use the default value for the traitlet in the following cases:
-        # - default is not None,
-        # - default is None and the trait is nullable.
-        # In the other cases, we assume that a None default means that
-        # there is no default value defined.
-        if (default is None and nullable) or default is not None:
-            super(NumericalTrait, self).__init__(default_value=default)
-        else:
-            super(NumericalTrait, self).__init__()
+                 default_value=Undefined, convertible_to=None, allow_none=False):
+        super(NumericalTrait, self).__init__(default_value=default_value,allow_none=allow_none)
 
-        # Just store all the construction arguments.
+        # Store the construction arguments.
         self.ndim = ndim
         self.shape = shape
         self.domain = domain
-        self.default = default
-        self.nullable = nullable
         self.target_unit = convertible_to
 
         if self.target_unit is not None:
@@ -72,11 +62,6 @@ class NumericalTrait(TraitType):
                     raise TraitError("shape={0} and ndim={1} are inconsistent".format(self.shape, self.ndim))
 
     def validate(self, obj, value):
-        # If the trait is nullable and the value is None,
-        # then we have nothing to check.
-        if self.nullable and value is None:
-            return value
-
         # We proceed by checking whether Numpy tells us the value is a
         # scalar. If Numpy isscalar returns False, it could still be scalar
         # but be a Quantity with units, so we then extract the numerical

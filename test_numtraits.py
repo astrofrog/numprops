@@ -13,9 +13,9 @@ class ScalarProperties(HasTraits):
     d = NumericalTrait(ndim=0, domain='negative')
     e = NumericalTrait(ndim=0, domain='strictly-negative')
     f = NumericalTrait(ndim=0, domain=(3, 4))
-    g = NumericalTrait(ndim=0, nullable=True)
-    h = NumericalTrait(ndim=0, nullable=True, default=1.23)
-    i = NumericalTrait(ndim=0, default=4.56)
+    g = NumericalTrait(ndim=0, allow_none=True, default_value=None)
+    h = NumericalTrait(ndim=0, allow_none=True, default_value=1.23)
+    i = NumericalTrait(ndim=0, default_value=4.56)
 
 class TestScalar(object):
 
