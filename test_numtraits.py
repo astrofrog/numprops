@@ -13,6 +13,7 @@ class ScalarProperties(HasTraits):
     d = NumericalTrait(ndim=0, domain='negative')
     e = NumericalTrait(ndim=0, domain='strictly-negative')
     f = NumericalTrait(ndim=0, domain=(3, 4))
+    g = NumericalTrait(ndim=0, default_value=2)
 
 class TestScalar(object):
 
@@ -84,6 +85,9 @@ class TestScalar(object):
         """
         quantities = pytest.importorskip("quantities")
         self.sp.a = 1*quantities.m
+
+    def test_default_value(self):
+        assert self.sp.g == 2
 
 class ArrayProperties(HasTraits):
 
