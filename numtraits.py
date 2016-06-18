@@ -97,7 +97,7 @@ class NumericalTrait(TraitType):
         if self.ndim is not None:
 
             if self.ndim == 0:
-                if not is_scalar:
+                if not is_scalar and num_value.ndim:
                     raise TraitError("{0} should be a scalar value".format(self.name))
 
             if self.ndim > 0:
