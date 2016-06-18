@@ -13,6 +13,7 @@ class ScalarProperties(HasTraits):
     d = NumericalTrait(ndim=0, domain='negative')
     e = NumericalTrait(ndim=0, domain='strictly-negative')
     f = NumericalTrait(ndim=0, domain=(3, 4))
+    g = NumericalTrait(ndim=0, default_value=2)
 
 class TestScalar(object):
 
@@ -79,6 +80,14 @@ class TestScalar(object):
             self.sp.f = 7
         assert exc.value.args[0] == "f should be in the range [3:4]"
 
+    def test_scalar_quantities(self):
+        """ Tests for issue #14.
+        """
+        quantities = pytest.importorskip("quantities")
+        self.sp.a = 1*quantities.m
+
+    def test_default_value(self):
+        assert self.sp.g == 2
 
 class ArrayProperties(HasTraits):
 
@@ -89,6 +98,7 @@ class ArrayProperties(HasTraits):
     e = NumericalTrait(domain='strictly-negative', ndim=1)
     f = NumericalTrait(domain=(3, 4), ndim=1)
     g = NumericalTrait(shape=(3, 4))
+
 
 class TestArray(object):
 

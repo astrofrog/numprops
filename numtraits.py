@@ -25,7 +25,9 @@
 
 from __future__ import print_function
 
-from traitlets import TraitType, TraitError
+import warnings
+
+from traitlets import TraitType, TraitError, Undefined
 
 import numpy as np
 
@@ -38,16 +40,18 @@ QUANTITIES = 'quantities'
 class NumericalTrait(TraitType):
     info_text = 'a numerical trait, either a scalar or a vector'
     def __init__(self, ndim=None, shape=None, domain=None,
-                 default=None, convertible_to=None):
-        super(NumericalTrait, self).__init__()
+                 default_value=Undefined, convertible_to=None, default=Undefined):
+        if default is not Undefined:
+            if default_value is not Undefined:
+                raise TypeError('Cannot set default and default_value simultaneously')
+            warnings.warn(DeprecationWarning('`default` has been renamed to `default_value`'))
+            default_value = default
+        super(NumericalTrait, self).__init__(default_value=default_value)
 
         # Just store all the construction arguments.
         self.ndim = ndim
         self.shape = shape
         self.domain = domain
-        # TODO: traitlets supports a `default` argument in __init__(), we should
-        # probably link them together once we start using this.
-        self.default = default
         self.target_unit = convertible_to
 
         if self.target_unit is not None:
@@ -97,7 +101,7 @@ class NumericalTrait(TraitType):
         if self.ndim is not None:
 
             if self.ndim == 0:
-                if not is_scalar:
+                if not is_scalar and num_value.ndim:
                     raise TraitError("{0} should be a scalar value".format(self.name))
 
             if self.ndim > 0:
