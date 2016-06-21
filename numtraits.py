@@ -123,16 +123,16 @@ class NumericalTrait(TraitType):
         else:
             prefix = "All values of "
 
-        if self.domain == 'positive':
+        if self.domain == 'strictly-positive':
             if np.any(num_value < 0.):
                 raise TraitError(prefix + "{0} should be positive".format(self.name))
-        elif self.domain == 'strictly-positive':
+        elif self.domain == 'positive':
             if np.any(num_value <= 0.):
                 raise TraitError(prefix + "{0} should be strictly positive".format(self.name))
-        elif self.domain == 'negative':
+        elif self.domain == 'strictly-negative':
             if np.any(num_value > 0.):
                 raise TraitError(prefix + "{0} should be negative".format(self.name))
-        elif self.domain == 'strictly-negative':
+        elif self.domain == 'negative':
             if np.any(num_value >= 0.):
                 raise TraitError(prefix + "{0} should be strictly negative".format(self.name))
         elif type(self.domain) in [tuple, list] and len(self.domain) == 2:
