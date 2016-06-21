@@ -25,7 +25,7 @@
 
 from __future__ import print_function
 
-from traitlets import TraitType, TraitError
+from traitlets import TraitType, TraitError, Undefined
 
 import numpy as np
 
@@ -38,16 +38,13 @@ QUANTITIES = 'quantities'
 class NumericalTrait(TraitType):
     info_text = 'a numerical trait, either a scalar or a vector'
     def __init__(self, ndim=None, shape=None, domain=None,
-                 default=None, convertible_to=None):
-        super(NumericalTrait, self).__init__()
+                 default_value=Undefined, convertible_to=None, allow_none=False):
+        super(NumericalTrait, self).__init__(default_value=default_value,allow_none=allow_none)
 
-        # Just store all the construction arguments.
+        # Store the construction arguments.
         self.ndim = ndim
         self.shape = shape
         self.domain = domain
-        # TODO: traitlets supports a `default` argument in __init__(), we should
-        # probably link them together once we start using this.
-        self.default = default
         self.target_unit = convertible_to
 
         if self.target_unit is not None:
@@ -65,7 +62,6 @@ class NumericalTrait(TraitType):
                     raise TraitError("shape={0} and ndim={1} are inconsistent".format(self.shape, self.ndim))
 
     def validate(self, obj, value):
-
         # We proceed by checking whether Numpy tells us the value is a
         # scalar. If Numpy isscalar returns False, it could still be scalar
         # but be a Quantity with units, so we then extract the numerical
